@@ -1,0 +1,10 @@
+{
+  "RootPath": "/api",
+  "Port": 9002,
+  "DB": {
+    "addr": "localhost",
+    "user": "root",
+    "password": "123456789",
+    "dbName": "bridge"
+  }
+}
