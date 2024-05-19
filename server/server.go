@@ -58,7 +58,8 @@ func (s *Service) SaveTx(ctx *gin.Context) {
 	fromAddress := root.Get("from_address").String()
 	toNetwork := root.Get("to_network").String()
 	toAddress := root.Get("to_address").String()
-	d := Deposit{fromNetwork, fromAddress, toNetwork, toAddress}
+	hash := root.Get("hash").String()
+	d := Deposit{fromNetwork, fromAddress, toNetwork, toAddress, hash}
 
 	err = s.db.Create(d).Error
 	if err != nil {
@@ -69,10 +70,9 @@ func (s *Service) SaveTx(ctx *gin.Context) {
 }
 
 func (s *Service) GetToAddress(ctx *gin.Context) {
-	fromNetwork := ctx.Query("from_network")
-	fromAddress := ctx.Query("from_address")
+	hash := ctx.Query("hash")
 	d := Deposit{}
-	err := s.db.Model(Deposit{}).Where("from_network=? and from_address=?", fromNetwork, fromAddress).First(&d).Error
+	err := s.db.Model(Deposit{}).Where("hash=?", hash).First(&d).Error
 	if err != nil {
 		s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
 		return
@@ -85,6 +85,7 @@ type Deposit struct {
 	FromAddress string `json:"from_address" gorm:"from_address"`
 	ToNetwork   string `json:"to_network" gorm:"to_network"`
 	ToAddress   string `json:"to_address" gorm:"to_address"`
+	Hash        string `json:"hash" gorm:"hash"`
 }
 
 func (d *Deposit) TableName() string {

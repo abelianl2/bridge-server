@@ -2,9 +2,9 @@
   "RootPath": "/api",
   "Port": 9002,
   "DB": {
-    "addr": "localhost",
+    "addr": "190.92.213.101:3307",
     "user": "root",
     "password": "123456789",
-    "dbName": "bridge"
+    "dbName": "abe_bridge"
   }
 }

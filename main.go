@@ -39,7 +39,7 @@ func main() {
 	//defer cancel()
 
 	root.POST("/bridge/address", srv.SaveTx)
-	root.GET("/bridge/toAddress", srv.GetToAddress)
+	root.GET("/bridge/hash", srv.GetToAddress)
 
 	err := e.Run(fmt.Sprintf(":%v", cfg.Port))
 	if err != nil {
