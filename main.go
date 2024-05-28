@@ -38,7 +38,8 @@ func main() {
 	//ctx, cancel := context.WithCancel(context.Background())
 	//defer cancel()
 
-	root.POST("/bridge/address", srv.SaveTx)
+	root.POST("/bridge/submit", srv.SaveTx)
+	root.POST("/bridge/submitWithMemo", srv.SaveTxAndMemo)
 	root.GET("/bridge/hash", srv.GetToAddress)
 	root.POST("/bridge/notify/:id", srv.NotifyTx)
 

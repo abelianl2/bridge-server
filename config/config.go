@@ -15,10 +15,12 @@ package config
 */
 
 type Config struct {
-	RootPath string `json:"RootPath" gorm:"column:RootPath"`
-	Port     int    `json:"Port" gorm:"column:Port"`
-	DB       DB     `json:"DB" gorm:"column:DB"`
-	LogLevel int    `json:"LogLevel"`
+	RootPath               string `json:"RootPath" gorm:"column:RootPath"`
+	Port                   int    `json:"Port" gorm:"column:Port"`
+	DepositContractAddress string `json:"DepositContractAddress" gorm:"column:DepositContractAddress"`
+	HookUri                string `json:"HookUri" gorm:"column:HookUri"`
+	DB                     DB     `json:"DB" gorm:"column:DB"`
+	LogLevel               int    `json:"LogLevel"`
 }
 
 type DB struct {
