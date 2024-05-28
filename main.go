@@ -40,6 +40,7 @@ func main() {
 
 	root.POST("/bridge/address", srv.SaveTx)
 	root.GET("/bridge/hash", srv.GetToAddress)
+	root.POST("/bridge/notify/:id", srv.NotifyTx)
 
 	err := e.Run(fmt.Sprintf(":%v", cfg.Port))
 	if err != nil {

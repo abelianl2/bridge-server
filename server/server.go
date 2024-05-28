@@ -8,6 +8,7 @@ import (
 
 	"github.com/abelianl2/bridge-server/config"
 	"github.com/gin-gonic/gin"
+	uuid2 "github.com/google/uuid"
 	"github.com/sunjiangjun/xlog"
 	"github.com/tidwall/gjson"
 	"gorm.io/driver/mysql"
@@ -47,6 +48,24 @@ func NewService(config config.Config, log *xlog.XLog) *Service {
 	}
 }
 
+func (s *Service) NotifyTx(ctx *gin.Context) {
+	uuid := ctx.Param("id")
+	b, err := io.ReadAll(ctx.Request.Body)
+	if err != nil {
+		s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
+		return
+	}
+	root := gjson.ParseBytes(b)
+	hash := root.Get("hash").String()
+
+	err = s.db.Model(&Deposit{}).Where("uuid=?", uuid).UpdateColumn("hash", hash).Error
+	if err != nil {
+		s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
+		return
+	}
+	s.Success(ctx, string(b), nil, ctx.Request.RequestURI)
+}
+
 func (s *Service) SaveTx(ctx *gin.Context) {
 	b, err := io.ReadAll(ctx.Request.Body)
 	if err != nil {
@@ -59,14 +78,15 @@ func (s *Service) SaveTx(ctx *gin.Context) {
 	toNetwork := root.Get("to_network").String()
 	toAddress := root.Get("to_address").String()
 	hash := root.Get("hash").String()
-	d := Deposit{fromNetwork, fromAddress, toNetwork, toAddress, hash}
+	uuid := uuid2.New().String()
+	d := Deposit{FromNetwork: fromNetwork, FromAddress: fromAddress, ToNetwork: toNetwork, ToAddress: toAddress, Hash: hash, UUID: uuid}
 
 	err = s.db.Create(d).Error
 	if err != nil {
 		s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
 		return
 	}
-	s.Success(ctx, string(b), nil, ctx.Request.RequestURI)
+	s.Success(ctx, string(b), d, ctx.Request.RequestURI)
 }
 
 func (s *Service) GetToAddress(ctx *gin.Context) {
@@ -85,6 +105,7 @@ type Deposit struct {
 	FromAddress string `json:"from_address" gorm:"from_address"`
 	ToNetwork   string `json:"to_network" gorm:"to_network"`
 	ToAddress   string `json:"to_address" gorm:"to_address"`
+	UUID        string `json:"uuid" gorm:"uuid"`
 	Hash        string `json:"hash" gorm:"hash"`
 }
 

@@ -30,12 +30,14 @@ CREATE TABLE `deposit`
     `from_address` varchar(255)                                                 NOT NULL,
     `to_network`   varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
     `to_address`   varchar(255)                                                 NOT NULL,
-    `create_time`  datetime DEFAULT CURRENT_TIMESTAMP,
-    `update_time`  datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `hash`         varchar(255)                                                 NOT NULL,
+    `create_time`  datetime                                                      DEFAULT CURRENT_TIMESTAMP,
+    `update_time`  datetime                                                      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `hash`         varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '',
+    `uuid`         varchar(255)                                                 NOT NULL,
     PRIMARY KEY (`id`),
+    UNIQUE KEY `uuid` (`uuid`) USING BTREE,
     UNIQUE KEY `hash1` (`hash`) USING BTREE,
     KEY            `ids` (`from_network`,`from_address`,`to_network`,`to_address`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 SET
 FOREIGN_KEY_CHECKS = 1;
