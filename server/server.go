@@ -1,6 +1,8 @@
 package server
 
 import (
+	"crypto/md5"
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -137,11 +139,13 @@ func (s *Service) SaveTxAndMemo(ctx *gin.Context) {
 
 	*/
 
+	from := md5.Sum([]byte(d.FromAddress))
 	callBack := CallBack{
 		Recipient:      s.config.DepositContractAddress,
 		AmountOfGasFee: "0.09",
+		Sender:         hex.EncodeToString(from[:]),
 		AmountOfAbel:   amount,
-		Memo:           hex.EncodeToString(memoBytes),
+		Memo:           base64.StdEncoding.EncodeToString(memoBytes),
 		Hook:           fmt.Sprintf("%v/%v", s.config.HookUri, uuid),
 	}
 
@@ -161,6 +165,7 @@ type CallBack struct {
 	AmountOfGasFee string `json:"amountOfGasFee" gorm:"column:amountOfGasFee"`
 	Hook           string `json:"hook" gorm:"column:hook"`
 	Recipient      string `json:"recipient" gorm:"column:recipient"`
+	Sender         string `json:"sender" gorm:"column:sender"`
 	Memo           string `json:"memo" gorm:"column:memo"`
 	AmountOfAbel   string `json:"amountOfAbel" gorm:"column:amountOfAbel"`
 }
