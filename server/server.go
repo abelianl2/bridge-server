@@ -163,9 +163,9 @@ type Memo struct {
 
 type CallBack struct {
 	AmountOfGasFee string `json:"amountOfGasFee" gorm:"column:amountOfGasFee"`
-	Hook           string `json:"hook" gorm:"column:hook"`
+	Hook           string `json:"callback" gorm:"column:callback"`
 	Recipient      string `json:"recipient" gorm:"column:recipient"`
-	Sender         string `json:"sender" gorm:"column:sender"`
+	Sender         string `json:"senderMd5" gorm:"column:sender"`
 	Memo           string `json:"memo" gorm:"column:memo"`
 	AmountOfAbel   string `json:"amountOfAbel" gorm:"column:amountOfAbel"`
 }
