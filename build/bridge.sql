@@ -36,8 +36,8 @@ CREATE TABLE `deposit`
     `uuid`         varchar(255)                                                 NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uuid` (`uuid`) USING BTREE,
-    UNIQUE KEY `hash1` (`hash`) USING BTREE,
-    KEY            `ids` (`from_network`,`from_address`,`to_network`,`to_address`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+    KEY            `ids` (`from_network`,`from_address`,`to_network`,`to_address`) USING BTREE,
+    KEY            `hash1` (`hash`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 SET
 FOREIGN_KEY_CHECKS = 1;

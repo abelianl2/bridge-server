@@ -8,6 +8,7 @@ import (
 
 	"github.com/abelianl2/bridge-server/config"
 	"github.com/abelianl2/bridge-server/server"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/sunjiangjun/xlog"
 )
@@ -28,6 +29,16 @@ func main() {
 	xLog := xlog.NewXLogger().BuildOutType(xlog.FILE).BuildLevel(xlog.Level(cfg.LogLevel)).BuildFormatter(xlog.FORMAT_JSON).BuildFile("./log/bridge", 24*time.Hour)
 
 	e := gin.Default()
+
+	// CORS configuration
+	e.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"}, // 允许所有域名访问
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	root := e.Group(cfg.RootPath)
 
