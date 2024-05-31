@@ -55,6 +55,31 @@ func NewService(config config.Config, log *xlog.XLog) *Service {
 	}
 }
 
+func (s *Service) GetDeposit(ctx *gin.Context) {
+	uuid := ctx.Param("id")
+	b, err := io.ReadAll(ctx.Request.Body)
+	if err != nil {
+		s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
+		return
+	}
+
+	var callbackStr string
+
+	err = s.db.Model(&Deposit{}).Select("call_back").Where("uuid=?", uuid).Pluck("call_back", &callbackStr).Error
+	if err != nil {
+		s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
+		return
+	}
+
+	var callBack CallBack
+	err = json.Unmarshal([]byte(callbackStr), &callBack)
+	if err != nil {
+		s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
+		return
+	}
+	s.Success(ctx, string(b), callBack, ctx.Request.RequestURI)
+}
+
 func (s *Service) NotifyTx(ctx *gin.Context) {
 	uuid := ctx.Param("id")
 	b, err := io.ReadAll(ctx.Request.Body)
@@ -86,20 +111,13 @@ func (s *Service) SaveTxAndMemo(ctx *gin.Context) {
 	toAddress := root.Get("to_address").String()
 	amount := root.Get("amount").String()
 	uuid := uuid2.New().String()
-	d := Deposit{FromNetwork: fromNetwork, FromAddress: fromAddress, ToNetwork: toNetwork, ToAddress: toAddress, UUID: uuid}
-
-	err = s.db.Create(d).Error
-	if err != nil {
-		s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
-		return
-	}
 
 	m := Memo{
 		Action:   "deposit",
 		Protocol: "Mable",
-		From:     d.FromAddress,                   //l1 from address
+		From:     fromAddress,                     //l1 from address
 		To:       s.config.DepositContractAddress, //l1 to address
-		Receipt:  d.ToAddress,                     //l2 mint address
+		Receipt:  toAddress,                       //l2 mint address
 		Value:    amount,                          // mint amount
 	}
 
@@ -139,7 +157,7 @@ func (s *Service) SaveTxAndMemo(ctx *gin.Context) {
 
 	*/
 
-	from := md5.Sum([]byte(d.FromAddress))
+	from := md5.Sum([]byte(fromAddress))
 	callBack := CallBack{
 		Recipient:      s.config.DepositContractAddress,
 		AmountOfGasFee: "0.09",
@@ -149,7 +167,18 @@ func (s *Service) SaveTxAndMemo(ctx *gin.Context) {
 		Hook:           fmt.Sprintf("%v/%v", s.config.HookUri, uuid),
 	}
 
-	s.Success(ctx, string(b), callBack, ctx.Request.RequestURI)
+	callBackData, _ := json.Marshal(callBack)
+
+	d := Deposit{FromNetwork: fromNetwork, FromAddress: fromAddress, ToNetwork: toNetwork, ToAddress: toAddress, UUID: uuid, CallBack: string(callBackData)}
+
+	err = s.db.Create(d).Error
+	if err != nil {
+		s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
+		return
+	}
+
+	depositUri := fmt.Sprintf("%v/%v", s.config.DepositUri, uuid)
+	s.Success(ctx, string(b), depositUri, ctx.Request.RequestURI)
 }
 
 type Memo struct {
@@ -211,6 +240,7 @@ type Deposit struct {
 	ToAddress   string `json:"to_address" gorm:"to_address"`
 	UUID        string `json:"uuid" gorm:"uuid"`
 	Hash        string `json:"hash" gorm:"hash"`
+	CallBack    string `json:"callBack" gorm:"call_back"`
 }
 
 func (d *Deposit) TableName() string {

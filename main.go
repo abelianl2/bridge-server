@@ -52,6 +52,7 @@ func main() {
 	root.POST("/bridge/submit", srv.SaveTx)
 	root.POST("/bridge/submitWithMemo", srv.SaveTxAndMemo)
 	root.GET("/bridge/hash", srv.GetToAddress)
+	root.GET("/bridge/deposit/:id", srv.GetDeposit)
 	root.POST("/bridge/notify/:id", srv.NotifyTx)
 
 	err := e.Run(fmt.Sprintf(":%v", cfg.Port))

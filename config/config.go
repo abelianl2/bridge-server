@@ -19,6 +19,7 @@ type Config struct {
 	Port                   int    `json:"Port" gorm:"column:Port"`
 	DepositContractAddress string `json:"DepositContractAddress" gorm:"column:DepositContractAddress"`
 	HookUri                string `json:"HookUri" gorm:"column:HookUri"`
+	DepositUri             string `json:"DepositUri" gorm:"column:DepositUri"`
 	DB                     DB     `json:"DB" gorm:"column:DB"`
 	LogLevel               int    `json:"LogLevel"`
 }
