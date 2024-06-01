@@ -57,15 +57,15 @@ func NewService(config config.Config, log *xlog.XLog) *Service {
 
 func (s *Service) GetDeposit(ctx *gin.Context) {
 	uuid := ctx.Param("id")
-	b, err := io.ReadAll(ctx.Request.Body)
-	if err != nil {
-		s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
-		return
-	}
+	//b, err := io.ReadAll(ctx.Request.Body)
+	//if err != nil {
+	//	s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
+	//	return
+	//}
 
 	var callbackStr string
 
-	err = s.db.Model(&Deposit{}).Select("call_back").Where("uuid=?", uuid).Pluck("call_back", &callbackStr).Error
+	err := s.db.Model(&Deposit{}).Select("call_back").Where("uuid=?", uuid).Pluck("call_back", &callbackStr).Error
 	if err != nil {
 		s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
 		return
@@ -77,7 +77,8 @@ func (s *Service) GetDeposit(ctx *gin.Context) {
 		s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
 		return
 	}
-	s.Success(ctx, string(b), callBack, ctx.Request.RequestURI)
+	//s.Success(ctx, string(b), callBack, ctx.Request.RequestURI)
+	ctx.JSON(200, callBack)
 }
 
 func (s *Service) NotifyTx(ctx *gin.Context) {
@@ -178,7 +179,10 @@ func (s *Service) SaveTxAndMemo(ctx *gin.Context) {
 	}
 
 	depositUri := fmt.Sprintf("%v/%v", s.config.DepositUri, uuid)
-	s.Success(ctx, string(b), depositUri, ctx.Request.RequestURI)
+	mp := make(map[string]any, 1)
+	mp["redirect"] = depositUri
+	ctx.JSON(200, mp)
+	//s.Success(ctx, string(b), mp, ctx.Request.RequestURI)
 }
 
 type Memo struct {
