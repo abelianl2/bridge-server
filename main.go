@@ -55,7 +55,7 @@ func main() {
 	root.GET("/bridge/deposit/:id", srv.GetDeposit)
 	root.POST("/bridge/notify/:id", srv.NotifyTx)
 
-	err := e.Run(fmt.Sprintf(":%v", cfg.Port))
+	err := e.RunTLS(fmt.Sprintf(":%v", cfg.Port), "./fullchain.pem", "./privkey.pem")
 	if err != nil {
 		panic(err)
 	}
