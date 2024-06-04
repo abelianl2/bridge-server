@@ -1,0 +1,164 @@
+{
+	"info": {
+		"_postman_id": "d6ce84d7-7d21-4557-afd8-0dd7c8e834a8",
+		"name": "bridge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "submit",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"from_network\": \"abelian-test\",\n        \"from_address\":\"abe36f503e14f9fe13950e009d89de269031aab054223858cc4241224b95c9fd0bed381d445ca1077b69f4bd12faa2248797f6edaee7d4777ff1a6366f3a46d198d8\",\n        \"to_network\": \"mable-test\",\n        \"to_address\": \"0xdac17f958d2ee523a2206206994597c13d831ec7\",\n        \"hash\":\"0x795051f637f8e0243ad5503af9cdfbd9653642b789427b8683ea732a46d48301\"\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://deposit-test.qday.ninja:9002/api/bridge/submit",
+					"protocol": "https",
+					"host": [
+						"deposit-test",
+						"qday",
+						"ninja"
+					],
+					"port": "9002",
+					"path": [
+						"api",
+						"bridge",
+						"submit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "submitWithmemo",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"from_network\": \"abelian-test\",\n        \"from_address\":\"abe36f503e14f9fe13950e009d89de269031aab054223858cc4241224b95c9fd0bed381d445ca1077b69f4bd12faa2248797f6edaee7d4777ff1a6366f3a46d198d8\",\n        \"to_network\": \"mable-test\",\n        \"to_address\": \"0xdac17f958d2ee523a2206206994597c13d831ec7\",\n        \"amount\":100000\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://deposit-test.qday.ninja:9002/api/bridge/submitWithMemo",
+					"protocol": "https",
+					"host": [
+						"deposit-test",
+						"qday",
+						"ninja"
+					],
+					"port": "9002",
+					"path": [
+						"api",
+						"bridge",
+						"submitWithMemo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "notify",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"hash\": \"0x1233333\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://deposit-test.qday.ninja:9002/api/bridge/notify/8a06fc8d-822b-4b36-89da-e2a7b464278d",
+					"protocol": "https",
+					"host": [
+						"deposit-test",
+						"qday",
+						"ninja"
+					],
+					"port": "9002",
+					"path": [
+						"api",
+						"bridge",
+						"notify",
+						"8a06fc8d-822b-4b36-89da-e2a7b464278d"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getToAddress",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://deposit-test.qday.ninja:9002/api/bridge/hash?hash=0xd6dfb90c0bb3c533df36c333cbe36376fe32c04d7c5be7b913b391209206cab0",
+					"protocol": "https",
+					"host": [
+						"deposit-test",
+						"qday",
+						"ninja"
+					],
+					"port": "9002",
+					"path": [
+						"api",
+						"bridge",
+						"hash"
+					],
+					"query": [
+						{
+							"key": "from_address",
+							"value": "abe36f503e14f9fe13950e009d89de269031aab054223858cc4241224b95c9fd0bed381d445ca1077b69f4bd12faa2248797f6edaee7d4777ff1a6366f3a46d198d8",
+							"disabled": true
+						},
+						{
+							"key": "hash",
+							"value": "0xd6dfb90c0bb3c533df36c333cbe36376fe32c04d7c5be7b913b391209206cab0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deposit",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://deposit-test.qday.ninja:9002/api/bridge/deposit/105172c9-010d-4e6e-a414-51971b5ac860",
+					"protocol": "https",
+					"host": [
+						"deposit-test",
+						"qday",
+						"ninja"
+					],
+					"port": "9002",
+					"path": [
+						"api",
+						"bridge",
+						"deposit",
+						"105172c9-010d-4e6e-a414-51971b5ac860"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
