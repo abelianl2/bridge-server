@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math/big"
 	"strings"
 	"time"
 
@@ -89,13 +90,19 @@ func (s *Service) NotifyTx(ctx *gin.Context) {
 		return
 	}
 	root := gjson.ParseBytes(b)
-	hash := root.Get("hash").String()
+	status := root.Get("status").String()
 
-	err = s.db.Model(&Deposit{}).Where("uuid=?", uuid).UpdateColumn("hash", hash).Error
-	if err != nil {
-		s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
-		return
+	if status == "submitted" {
+		hash := root.Get("txid").String()
+		err = s.db.Model(&Deposit{}).Where("uuid=?", uuid).UpdateColumn("hash", hash).Error
+		if err != nil {
+			s.Error(ctx, "", ctx.Request.RequestURI, err.Error())
+			return
+		}
+	} else {
+		// preparing
 	}
+
 	s.Success(ctx, string(b), nil, ctx.Request.RequestURI)
 }
 
@@ -113,13 +120,27 @@ func (s *Service) SaveTxAndMemo(ctx *gin.Context) {
 	amount := root.Get("amount").String()
 	uuid := uuid2.New().String()
 
+	// 将字符串转换为浮点数
+	// 将字符串转换为big.Float
+	floatVal, _, err := big.ParseFloat(amount, 10, 256, big.ToNearestEven)
+	if err != nil {
+		fmt.Println("Error converting string to big.Float:", err)
+		return
+	}
+
+	// 创建一个big.Float表示10的7次方
+	powerOfTen := new(big.Float).SetFloat64(1e7)
+
+	// 计算浮点数乘以10的7次方
+	result := new(big.Float).Mul(floatVal, powerOfTen)
+
 	m := Memo{
 		Action:   "deposit",
 		Protocol: "Mable",
 		From:     fromAddress,                     //l1 from address
 		To:       s.config.DepositContractAddress, //l1 to address
 		Receipt:  toAddress,                       //l2 mint address
-		Value:    amount,                          // mint amount
+		Value:    result.String(),                 // mint amount
 	}
 
 	bs, err := json.Marshal(m)
