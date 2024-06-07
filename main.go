@@ -28,6 +28,7 @@ func main() {
 
 	xLog := xlog.NewXLogger().BuildOutType(xlog.FILE).BuildLevel(xlog.Level(cfg.LogLevel)).BuildFormatter(xlog.FORMAT_JSON).BuildFile("./log/bridge", 24*time.Hour)
 
+	gin.SetMode(gin.ReleaseMode)
 	e := gin.Default()
 
 	// CORS configuration
