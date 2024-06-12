@@ -27,6 +27,8 @@ services:
       - mysql
     volumes:
       - ./config:/app/config
+      - ./config/fullchain.pem:/app/fullchain.pem
+      - ./config/privkey.pem:/app/privkey.pem
     ports:
       - 9002:9002
     command:
