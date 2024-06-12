@@ -1,4 +1,4 @@
-FROM golang:1.21.4  as builder
+FROM golang:1.21.9  as builder
 ENV CGO_ENABLED 0
 ENV GOPROXY https://goproxy.cn,direct
 RUN cd / && mkdir app
@@ -10,7 +10,7 @@ COPY . /app
 RUN  go build -ldflags '-s -w' -o ./build/abe-bridge main.go
 
 # =====
-FROM alpine:3.18.0
+FROM alpine:3.19.1
 
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/cadok-certificates.crt
 COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /usr/share/zoneinfo/Asia/Shanghai

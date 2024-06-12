@@ -1,0 +1,33 @@
+version: "3.5"
+networks:
+  default:
+    name: abelian-l2
+services:
+  mysql:
+    container_name: bridge-db
+    image: mysql:8.0
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    volumes:
+      - ./docker-entrypoint-initdb.d/bridge.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/mysql2/datadir:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456789
+      - MYSQL_DATABASE=abe_bridge
+    ports:
+      - 3307:3306
+
+  bridge:
+    container_name: bridge-server
+    image: ghcr.io/abelianl2/bridge:1.0
+    restart: always
+    volumes:
+      - ./config:/app/config
+    ports:
+      - 9002:9002
+    command:
+      - /app/abe-bridge
+      - -config
+      - ./config/config.json
