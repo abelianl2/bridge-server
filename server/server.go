@@ -28,8 +28,21 @@ type Service struct {
 }
 
 func NewService(config config.Config, log *xlog.XLog) *Service {
+
+	var db *gorm.DB
+	var err error
+
 	dsn := fmt.Sprintf("%v:%v@tcp(%v)/%v?charset=utf8mb4&parseTime=True&loc=Local", config.DB.User, config.DB.Password, config.DB.Addr, config.DB.DbName)
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+	//retry and waiting for db start
+	for i := 0; i < 2; i++ {
+		time.Sleep(10 * time.Second)
+		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+		if err == nil {
+			break
+		}
+	}
+
 	if err != nil {
 		panic(err)
 	}
