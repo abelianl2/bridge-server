@@ -21,8 +21,10 @@ services:
 
   bridge:
     container_name: bridge-server
-    image: ghcr.io/abelianl2/bridge:1.0
+    image: ghcr.io/abelianl2/bridge:0.1.0
     restart: always
+    depends_on:
+      - mysql
     volumes:
       - ./config:/app/config
     ports:
