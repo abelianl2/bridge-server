@@ -131,6 +131,9 @@ func (s *Service) SaveTxAndMemo(ctx *gin.Context) {
 	toNetwork := root.Get("to_network").String()
 	toAddress := root.Get("to_address").String()
 	amount := root.Get("amount").String()
+	lockupPeriod := root.Get("lockupPeriod").Int()
+	rewardRatio := root.Get("rewardRatio").Int()
+
 	uuid := uuid2.New().String()
 
 	// 将字符串转换为浮点数
@@ -148,12 +151,14 @@ func (s *Service) SaveTxAndMemo(ctx *gin.Context) {
 	result := new(big.Float).Mul(floatVal, powerOfTen)
 
 	m := Memo{
-		Action:   "deposit",
-		Protocol: "Mable",
-		From:     fromAddress,                     //l1 from address
-		To:       s.config.DepositContractAddress, //l1 to address
-		Receipt:  toAddress,                       //l2 mint address
-		Value:    result.String(),                 // mint amount
+		Action:       "deposit",
+		Protocol:     "Mable",
+		From:         fromAddress,                     //l1 from address
+		To:           s.config.DepositContractAddress, //l1 to address
+		Receipt:      toAddress,                       //l2 mint address
+		Value:        result.String(),                 // mint amount
+		LockupPeriod: lockupPeriod,
+		RewardRatio:  rewardRatio,
 	}
 
 	bs, err := json.Marshal(m)
@@ -220,12 +225,14 @@ func (s *Service) SaveTxAndMemo(ctx *gin.Context) {
 }
 
 type Memo struct {
-	Protocol string `json:"protocol" gorm:"column:protocol"`
-	Action   string `json:"action" gorm:"column:action"`
-	From     string `json:"from" gorm:"column:from"`
-	Receipt  string `json:"receipt" gorm:"column:receipt"`
-	To       string `json:"to" gorm:"column:to"`
-	Value    string `json:"value" gorm:"column:value"`
+	Protocol     string `json:"protocol" gorm:"column:protocol"`
+	Action       string `json:"action" gorm:"column:action"`
+	From         string `json:"from" gorm:"column:from"`
+	Receipt      string `json:"receipt" gorm:"column:receipt"`
+	To           string `json:"to" gorm:"column:to"`
+	Value        string `json:"value" gorm:"column:value"`
+	LockupPeriod int64  `json:"lockupPeriod" gorm:"column:lockup_period"`
+	RewardRatio  int64  `json:"rewardRatio" gorm:"column:reward_ratio"`
 }
 
 type CallBack struct {
