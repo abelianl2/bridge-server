@@ -1,6 +1,7 @@
 {
   "RootPath": "/api",
   "Port": 9002,
+  "Https": false,
   "DepositContractAddress": "abe338ce0ce178fb0aca42b4e400cdf395c92cbf9c5c9abd678aa516835f697bd6d280b285815924f862352c5463421c9f8d247f65dc112aa04c25de925bd1d1a334",
   "HookUri": "https://deposit-test.qday.ninja:9002/api/bridge/notify",
   "DepositUri": "https://deposit-test.qday.ninja:9002/api/bridge/deposit",
