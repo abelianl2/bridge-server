@@ -17,6 +17,7 @@ package config
 type Config struct {
 	RootPath               string `json:"RootPath" gorm:"column:RootPath"`
 	Port                   int    `json:"Port" gorm:"column:Port"`
+	Https                  bool   `json:"Https" gorm:"column:Https"`
 	DepositContractAddress string `json:"DepositContractAddress" gorm:"column:DepositContractAddress"`
 	HookUri                string `json:"HookUri" gorm:"column:HookUri"`
 	DepositUri             string `json:"DepositUri" gorm:"column:DepositUri"`
