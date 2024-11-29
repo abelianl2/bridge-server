@@ -6,9 +6,9 @@
   "HookUri": "https://deposit-test.qday.ninja:9002/api/bridge/notify",
   "DepositUri": "https://deposit-test.qday.ninja:9002/api/bridge/deposit",
   "DB": {
-    "addr": "190.92.213.101:3307",
+    "addr": "localhost:3307",
     "user": "root",
     "password": "123456789",
-    "dbName": "abe_bridge"
+    "dbName": "bridge"
   }
 }

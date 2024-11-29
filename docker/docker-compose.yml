@@ -11,11 +11,11 @@ services:
     shm_size: 128mb
     # or set shared memory limit when deploy via swarm stack
     volumes:
-      - ./docker-entrypoint-initdb.d/bridge.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - ./db/mysql2/datadir:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=123456789
-      - MYSQL_DATABASE=abe_bridge
+      - MYSQL_DATABASE=bridge
     ports:
       - 3307:3306
 
